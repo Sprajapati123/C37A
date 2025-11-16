@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,7 +18,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +34,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.c37a.ui.theme.C37ATheme
+import com.example.c37a.ui.theme.Pink
 
 class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,10 +74,11 @@ fun ProfileBody() {
 
             }
 
-            Row(modifier = Modifier.fillMaxWidth(),
+            Row(
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround
-                ) {
+            ) {
                 Image(
                     painter = painterResource(R.drawable.apple),
                     contentDescription = null,
@@ -96,6 +102,43 @@ fun ProfileBody() {
 
             }
 
+            OutlinedButton(onClick = {}) {
+                Text("Email")
+            }
+            Button(
+                onClick = {},
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Pink,
+                    contentColor = Color.White
+                ),
+                border = BorderStroke(2.dp,Color.Black),
+                shape = RoundedCornerShape(8.dp)
+                ) {
+                Text("Follow")
+            }
+
+            Row {
+                Text("Recently played", modifier = Modifier.weight(2f))
+
+                Row(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.baseline_arrow_back_ios_new_24),
+                        contentDescription = null
+                    )
+                    Icon(
+                        painter = painterResource(R.drawable.baseline_arrow_back_ios_new_24),
+                        contentDescription = null
+                    )
+                    Icon(
+                        painter = painterResource(R.drawable.baseline_arrow_back_ios_new_24),
+                        contentDescription = null
+                    )
+                }
+
+
+            }
         }
     }
 }
