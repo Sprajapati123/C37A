@@ -1,5 +1,7 @@
 package com.example.c37a
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -38,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -73,6 +76,9 @@ fun LoginBody() {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var visibility by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val activity = context as Activity
 
     Scaffold { padding ->
         Column(
@@ -224,6 +230,13 @@ fun LoginBody() {
 
             Button(
                 onClick = {
+                    val intent = Intent(
+                        context, DashboardActivity::class.java
+                    )
+                    intent.putExtra("email",email)
+                    intent.putExtra("password",password)
+                    context.startActivity(intent)
+                    activity.finish()
 
                 },
                 elevation = ButtonDefaults.buttonElevation(
@@ -231,7 +244,8 @@ fun LoginBody() {
 
                 ),
                 modifier = Modifier
-                    .fillMaxWidth().height(60.dp)
+                    .fillMaxWidth()
+                    .height(60.dp)
                     .padding(horizontal = 15.dp),
                 shape = RoundedCornerShape(10.dp),
 
@@ -239,17 +253,29 @@ fun LoginBody() {
                 Text("Log In")
             }
 
-            Text(buildAnnotatedString {
-                append("Don't have account?")
+            Text(
+                buildAnnotatedString {
+                    append("Don't have account?")
 
-                withStyle(SpanStyle(color = Blue)){
-                    append("Sign  up")
+                    withStyle(SpanStyle(color = Blue)) {
+                        append("Sign  up")
+                    }
+
+                }, modifier = Modifier.padding(
+                    horizontal = 15.dp, vertical = 10.dp
+
+                ).clickable{
+                    val intent = Intent(
+                        context,
+                        RegistrationActivity::class.java
+                    )
+
+
+                    context.startActivity(intent)
+                    activity.finish()
+
                 }
-
-            }, modifier = Modifier.padding(horizontal = 15.dp, vertical = 10.dp
-
-            ))
-
+            )
 
 
         }
