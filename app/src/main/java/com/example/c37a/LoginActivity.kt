@@ -1,9 +1,11 @@
 package com.example.c37a
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -79,6 +81,14 @@ fun LoginBody() {
 
     val context = LocalContext.current
     val activity = context as Activity
+
+    val sharedPreferences = context.getSharedPreferences(
+        "User",
+        Context.MODE_PRIVATE
+    )
+
+    val localEmail: String? = sharedPreferences.getString("email", "")
+    val localPassword: String? = sharedPreferences.getString("password", "")
 
     Scaffold { padding ->
         Column(
@@ -230,13 +240,19 @@ fun LoginBody() {
 
             Button(
                 onClick = {
-                    val intent = Intent(
-                        context, DashboardActivity::class.java
-                    )
-                    intent.putExtra("email",email)
-                    intent.putExtra("password",password)
-                    context.startActivity(intent)
-                    activity.finish()
+                    if (localEmail == email && localPassword == password) {
+                        val intent = Intent(
+                            context, DashboardActivity::class.java
+                        )
+
+                        context.startActivity(intent)
+                        activity.finish()
+                    } else {
+                        Toast.makeText(context,
+                            "invalid login",
+                            Toast.LENGTH_SHORT).show()
+                    }
+
 
                 },
                 elevation = ButtonDefaults.buttonElevation(
@@ -261,20 +277,22 @@ fun LoginBody() {
                         append("Sign  up")
                     }
 
-                }, modifier = Modifier.padding(
-                    horizontal = 15.dp, vertical = 10.dp
+                }, modifier = Modifier
+                    .padding(
+                        horizontal = 15.dp, vertical = 10.dp
 
-                ).clickable{
-                    val intent = Intent(
-                        context,
-                        RegistrationActivity::class.java
                     )
+                    .clickable {
+                        val intent = Intent(
+                            context,
+                            RegistrationActivity::class.java
+                        )
 
 
-                    context.startActivity(intent)
-                    activity.finish()
+                        context.startActivity(intent)
+                        activity.finish()
 
-                }
+                    }
             )
 
 
