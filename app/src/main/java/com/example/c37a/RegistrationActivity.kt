@@ -1,7 +1,9 @@
 package com.example.c37a
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -69,7 +71,7 @@ class RegistrationActivity : ComponentActivity() {
 }
 
 @Composable
-fun RegisterBody(){
+fun RegisterBody() {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var visibility by remember { mutableStateOf(false) }
@@ -88,15 +90,19 @@ fun RegisterBody(){
 
 
     var datepicker = DatePickerDialog(
-        context,{
-            _,y,m,d-> selectedDate = "$y/${m+1}/$d"
+        context, { _, y, m, d ->
+            selectedDate = "$y/${m + 1}/$d"
 
         },
-        year,month,day
+        year, month, day
     )
 
+    val sharedPreference = context.
+                getSharedPreferences("User",
+                        Context.MODE_PRIVATE)
 
 
+    val editor = sharedPreference.edit()
 
 
     Scaffold { padding ->
@@ -198,9 +204,10 @@ fun RegisterBody(){
                 placeholder = {
                     Text("dd/mm/yyyy")
                 },
-               enabled = false,
+                enabled = false,
                 modifier = Modifier
-                    .fillMaxWidth().clickable{
+                    .fillMaxWidth()
+                    .clickable {
                         datepicker.show()
                     }
                     .padding(horizontal = 15.dp),
@@ -217,10 +224,10 @@ fun RegisterBody(){
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            Row (
+            Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 Checkbox(
                     checked = terms,
                     onCheckedChange = {
@@ -236,6 +243,19 @@ fun RegisterBody(){
 
             Button(
                 onClick = {
+                    if(!terms){
+                        Toast.makeText(context,
+                            "Please agree to terms & conditions",
+                            Toast.LENGTH_SHORT).show()
+                    }else{
+                        editor.putString("email",email)
+                        editor.putString("password",password)
+                        editor.putString("date",selectedDate)
+                        editor.apply()
+                        Toast.makeText(context,
+                            "Registration success",
+                            Toast.LENGTH_SHORT).show()
+                    }
 
                 },
                 elevation = ButtonDefaults.buttonElevation(
@@ -243,7 +263,8 @@ fun RegisterBody(){
 
                 ),
                 modifier = Modifier
-                    .fillMaxWidth().height(60.dp)
+                    .fillMaxWidth()
+                    .height(60.dp)
                     .padding(horizontal = 15.dp),
                 shape = RoundedCornerShape(10.dp),
 
@@ -251,17 +272,19 @@ fun RegisterBody(){
                 Text("Register")
             }
 
-            Text(buildAnnotatedString {
-                append("Already a member?")
+            Text(
+                buildAnnotatedString {
+                    append("Already a member?")
 
-                withStyle(SpanStyle(color = Blue)){
-                    append(" Sign  In")
-                }
+                    withStyle(SpanStyle(color = Blue)) {
+                        append(" Sign  In")
+                    }
 
-            }, modifier = Modifier.padding(horizontal = 15.dp, vertical = 10.dp
+                }, modifier = Modifier.padding(
+                    horizontal = 15.dp, vertical = 10.dp
 
-            ))
-
+                )
+            )
 
 
         }
@@ -270,6 +293,6 @@ fun RegisterBody(){
 
 @Preview
 @Composable
-fun RegisterPreview(){
+fun RegisterPreview() {
     RegisterBody()
 }

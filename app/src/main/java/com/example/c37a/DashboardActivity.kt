@@ -41,7 +41,6 @@ fun DashboardBody() {
                 .fillMaxSize()
                 .padding(padding)
         ) {
-
             Text("Email: $email")
             Text("Password: $password")
         }
