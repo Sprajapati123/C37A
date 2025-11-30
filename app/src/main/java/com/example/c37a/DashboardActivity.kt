@@ -46,9 +46,11 @@ fun DashboardBody() {
             TopAppBar(
                 title = {Text("Ecommerce")},
                 navigationIcon = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {
+                        activity.finish()
+                    }) {
                         Icon(
-                            painter = painterResource(R.drawable.baseline_visibility_24),
+                            painter = painterResource(R.drawable.baseline_arrow_back_ios_new_24),
                             contentDescription = null
                         )
                     }
