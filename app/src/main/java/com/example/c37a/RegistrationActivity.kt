@@ -255,7 +255,7 @@ fun RegisterBody() {
                         Toast.makeText(context,
                             "Registration success",
                             Toast.LENGTH_SHORT).show()
-                        activity.finish()
+//                        activity.finish()
                     }
 
                 },
