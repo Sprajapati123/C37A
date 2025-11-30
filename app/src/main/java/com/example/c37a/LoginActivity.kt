@@ -290,7 +290,7 @@ fun LoginBody() {
 
 
                         context.startActivity(intent)
-                        activity.finish()
+
 
                     }
             )
