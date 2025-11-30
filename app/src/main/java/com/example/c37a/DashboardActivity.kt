@@ -56,6 +56,7 @@ fun DashboardBody() {
 
     var selectedIndex by remember { mutableStateOf(0) }
 
+
     val navList = listOf(
         NavItem(label = "Home", icon = R.drawable.baseline_home_24),
         NavItem(label = "Search", icon = R.drawable.baseline_search_24),
@@ -136,4 +137,7 @@ fun DashboardBody() {
             }
         }
     }
+
+
 }
+
