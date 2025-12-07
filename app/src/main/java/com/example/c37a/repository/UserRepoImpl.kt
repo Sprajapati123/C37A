@@ -19,11 +19,11 @@ class UserRepoImpl : UserRepo {
         callback: (Boolean, String) -> Unit
     ) {
         auth.signInWithEmailAndPassword(email, password)
-                     .addOnCompleteListener {
+            .addOnCompleteListener {
                 if (it.isSuccessful) {
-                    callback(true,"Login success")
+                    callback(true, "Login success")
                 } else {
-                    callback(false,"${it.exception?.message}")
+                    callback(false, "${it.exception?.message}")
 
                 }
             }
@@ -34,12 +34,12 @@ class UserRepoImpl : UserRepo {
         password: String,
         callback: (Boolean, String, String) -> Unit
     ) {
-        auth.createUserWithEmailAndPassword(email,password)
+        auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener {
-                if(it.isSuccessful){
-                    callback(true,"Registration success","${auth.currentUser?.uid}")
-                }else{
-                    callback(false,"${it.exception?.message}","")
+                if (it.isSuccessful) {
+                    callback(true, "Registration success", "${auth.currentUser?.uid}")
+                } else {
+                    callback(false, "${it.exception?.message}", "")
                 }
             }
     }
@@ -49,7 +49,13 @@ class UserRepoImpl : UserRepo {
         model: UserModel,
         callback: (Boolean, String) -> Unit
     ) {
-        TODO("Not yet implemented")
+        ref.child(userId).setValue(model).addOnCompleteListener {
+            if (it.isSuccessful) {
+                callback(true, "Registration success")
+            } else {
+                callback(false, "${it.exception?.message}")
+            }
+        }
     }
 
     override fun updateProfile(
@@ -57,14 +63,27 @@ class UserRepoImpl : UserRepo {
         model: UserModel,
         callback: (Boolean, String) -> Unit
     ) {
-        TODO("Not yet implemented")
+        ref.child(userId).updateChildren(model.toMap())
+            .addOnCompleteListener {
+            if (it.isSuccessful) {
+                callback(true, "Profile updated")
+            } else {
+                callback(false, "${it.exception?.message}")
+            }
+        }
     }
 
     override fun deleteAccount(
         userId: String,
         callback: (Boolean, String) -> Unit
     ) {
-        TODO("Not yet implemented")
+        ref.child(userId).removeValue().addOnCompleteListener {
+            if(it.isSuccessful){
+                callback(true,"Account deleted")
+            }else{
+                callback(false,"${it.exception?.message}")
+            }
+        }
     }
 
     override fun getUserById(
