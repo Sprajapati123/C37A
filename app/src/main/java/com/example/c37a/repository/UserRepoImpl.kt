@@ -52,6 +52,7 @@ class UserRepoImpl : UserRepo {
         model: UserModel,
         callback: (Boolean, String) -> Unit
     ) {
+//        var id = ref.push().key.toString()
         ref.child(userId).setValue(model).addOnCompleteListener {
             if (it.isSuccessful) {
                 callback(true, "Registration success")
@@ -152,10 +153,9 @@ class UserRepoImpl : UserRepo {
         auth.sendPasswordResetEmail(email)
             .addOnCompleteListener {
                 if (it.isSuccessful) {
-                    callback(true, "Email sent to $email")
+                    callback(true, "Email sent to $email ")
                 } else {
                     callback(false, "${it.exception?.message}")
-
                 }
             }
     }
