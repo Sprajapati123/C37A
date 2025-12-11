@@ -3,8 +3,11 @@ package com.example.c37a.repository
 import com.example.c37a.model.UserModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class UserRepoImpl : UserRepo {
 
@@ -65,12 +68,12 @@ class UserRepoImpl : UserRepo {
     ) {
         ref.child(userId).updateChildren(model.toMap())
             .addOnCompleteListener {
-            if (it.isSuccessful) {
-                callback(true, "Profile updated")
-            } else {
-                callback(false, "${it.exception?.message}")
+                if (it.isSuccessful) {
+                    callback(true, "Profile updated")
+                } else {
+                    callback(false, "${it.exception?.message}")
+                }
             }
-        }
     }
 
     override fun deleteAccount(
@@ -78,10 +81,10 @@ class UserRepoImpl : UserRepo {
         callback: (Boolean, String) -> Unit
     ) {
         ref.child(userId).removeValue().addOnCompleteListener {
-            if(it.isSuccessful){
-                callback(true,"Account deleted")
-            }else{
-                callback(false,"${it.exception?.message}")
+            if (it.isSuccessful) {
+                callback(true, "Account deleted")
+            } else {
+                callback(false, "${it.exception?.message}")
             }
         }
     }
@@ -90,18 +93,70 @@ class UserRepoImpl : UserRepo {
         userId: String,
         callback: (Boolean, String, UserModel?) -> Unit
     ) {
-        TODO("Not yet implemented")
+        ref.child(userId)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        val users = snapshot.getValue(UserModel::class.java)
+                        if (users != null) {
+                            callback(true, "profile fetched", users)
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    callback(false, error.message, null)
+                }
+            })
     }
 
     override fun getAllUser(callback: (Boolean, String, List<UserModel>?) -> Unit) {
-        TODO("Not yet implemented")
+        ref.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()){
+                    val allUsers = mutableListOf<UserModel>()
+                    for(data in snapshot.children){
+                        val user = data.getValue(UserModel::class.java)
+                        if(user != null){
+                            allUsers.add(user)
+                        }
+                    }
+                    callback(true,"profile fetched",allUsers)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                callback(false,error.message,emptyList())
+            }
+        })
     }
 
-    override fun getCurrentUser(): FirebaseUser {
-        TODO("Not yet implemented")
+    override fun getCurrentUser(): FirebaseUser? {
+        return auth.currentUser
     }
 
     override fun logOut(callback: (Boolean, String) -> Unit) {
-        TODO("Not yet implemented")
+        try {
+            auth.signOut()
+            callback(true, "logout succesfully")
+        } catch (e: Exception) {
+            callback(false, "${e.message}")
+
+        }
+    }
+
+    override fun forgetPassword(
+        email: String,
+        callback: (Boolean, String) -> Unit
+    ) {
+        auth.sendPasswordResetEmail(email)
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    callback(true, "Email sent to $email")
+                } else {
+                    callback(false, "${it.exception?.message}")
+
+                }
+            }
     }
 }

@@ -7,7 +7,7 @@ interface UserRepo {
 
 //    {
 //     "success":true,
-//    "message":"registration success"
+//    "message":"email sent"
 //    }
 
     fun login(
@@ -44,7 +44,9 @@ interface UserRepo {
 
     fun getAllUser(callback: (Boolean, String,List<UserModel>?) -> Unit)
 
-    fun getCurrentUser() : FirebaseUser
+    fun getCurrentUser() : FirebaseUser?
 
     fun logOut(callback: (Boolean, String) -> Unit)
+
+    fun forgetPassword(email:String,callback: (Boolean, String) -> Unit)
 }
