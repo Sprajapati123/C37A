@@ -53,11 +53,14 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.c37a.model.UserModel
+import com.example.c37a.repository.UserRepoImpl
 import com.example.c37a.ui.theme.Black
 import com.example.c37a.ui.theme.Blue
 import com.example.c37a.ui.theme.C37ATheme
 import com.example.c37a.ui.theme.PurpleGrey80
 import com.example.c37a.ui.theme.White
+import com.example.c37a.viewmodel.UserViewModel
 import java.util.Calendar
 
 class RegistrationActivity : ComponentActivity() {
@@ -72,6 +75,9 @@ class RegistrationActivity : ComponentActivity() {
 
 @Composable
 fun RegisterBody() {
+
+    val userViewModel = remember { UserViewModel(UserRepoImpl()) }
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var visibility by remember { mutableStateOf(false) }
@@ -248,14 +254,46 @@ fun RegisterBody() {
                             "Please agree to terms & conditions",
                             Toast.LENGTH_SHORT).show()
                     }else{
-                        editor.putString("email",email)
-                        editor.putString("password",password)
-                        editor.putString("date",selectedDate)
-                        editor.apply()
-                        Toast.makeText(context,
-                            "Registration success",
-                            Toast.LENGTH_SHORT).show()
-//                        activity.finish()
+                        userViewModel.register(email,password){
+                            success,msg,userId->
+                            if(success){
+                                val model = UserModel(
+                                    userId = userId,
+                                    email = email,
+                                    firstName = "",
+                                    lastName = "",
+                                    dob = selectedDate
+                                )
+                                userViewModel.addUserToDatabase(userId,model){
+                                    success,msg->
+                                    if(success){
+                                        Toast.makeText(context,
+                                            msg,
+                                            Toast.LENGTH_SHORT).show()
+                                        //activity.finish()
+                                    }else{
+                                        Toast.makeText(context,
+                                            msg,
+                                            Toast.LENGTH_SHORT).show()
+
+                                    }
+                                }
+                            }else{
+                                Toast.makeText(context,
+                                    msg,
+                                    Toast.LENGTH_SHORT).show()
+
+                            }
+                        }
+
+//                        editor.putString("email",email)
+//                        editor.putString("password",password)
+//                        editor.putString("date",selectedDate)
+//                        editor.apply()
+//                        Toast.makeText(context,
+//                            "Registration success",
+//                            Toast.LENGTH_SHORT).show()
+////                        activity.finish()
                     }
 
                 },
