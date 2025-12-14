@@ -1,5 +1,6 @@
 package com.example.c37a.view
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -28,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -36,9 +38,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.c37a.DashboardActivity
+import com.example.c37a.model.ProductModel
+import com.example.c37a.repository.ProductRepoImpl
 import com.example.c37a.ui.theme.Blue
 import com.example.c37a.ui.theme.PurpleGrey80
 import com.example.c37a.view.ui.theme.C37ATheme
+import com.example.c37a.viewmodel.ProductViewModel
 
 class AddProductActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +61,10 @@ fun AddProductBody() {
     var pPrice by remember { mutableStateOf("") }
     var pDesc by remember { mutableStateOf("") }
 
+    val context = LocalContext.current
+    val activity = context as? Activity
+
+    val productViewModel = remember { ProductViewModel(ProductRepoImpl()) }
     Scaffold { padding ->
         LazyColumn(
             modifier = Modifier
@@ -149,8 +158,21 @@ fun AddProductBody() {
                 Spacer(modifier = Modifier.height(15.dp))
                 Button(
                     onClick = {
+                        val model = ProductModel(
+                            "",
+                            pName,
+                            pDesc,
+                            pPrice.toDouble()
+                        )
+                        productViewModel.addProduct(model) { success, message ->
+                            if (success) {
+                                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                activity?.finish()
+                            } else {
+                                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
-
+                            }
+                        }
                     },
                     elevation = ButtonDefaults.buttonElevation(
                         defaultElevation = 10.dp

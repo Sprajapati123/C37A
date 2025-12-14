@@ -1,0 +1,53 @@
+package com.example.c37a.viewmodel
+
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.example.c37a.model.ProductModel
+import com.example.c37a.repository.ProductRepo
+
+class ProductViewModel(val repo: ProductRepo) : ViewModel() {
+    fun addProduct(
+        model: ProductModel,
+        callback: (Boolean, String) -> Unit
+    ) {
+        repo.addProduct(model, callback)
+    }
+
+    fun deleteProduct(productId: String, callback: (Boolean, String) -> Unit) {
+        repo.deleteProduct(productId, callback)
+    }
+
+    fun editProduct(
+        productId: String,
+        model: ProductModel,
+        callback: (Boolean, String) -> Unit
+    ) {
+        repo.editProduct(productId, model, callback)
+    }
+
+    private val _products = MutableLiveData<ProductModel?>()
+    val products: MutableLiveData<ProductModel?> get() = _products
+
+    private val _allProducts = MutableLiveData<List<ProductModel>?>()
+    val allProducts: MutableLiveData<List<ProductModel>?> get() = _allProducts
+
+    fun getAllProduct() {
+        repo.getAllProduct { success, message, data ->
+            if (success) {
+                _allProducts.value = data
+            } else {
+                _allProducts.value = emptyList()
+            }
+        }
+    }
+
+    fun getProductById(productId: String) {
+        repo.getProductById(productId) { success, message, data ->
+            if (success) {
+                _products.value = data
+            } else {
+                _products.value = null
+            }
+        }
+    }
+}
