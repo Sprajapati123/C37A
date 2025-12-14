@@ -15,6 +15,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.C37A">
         <activity
+            android:name=".view.ForgetPasswordActivity"
+            android:exported="true"
+            android:label="@string/title_activity_forget_password"
+            android:theme="@style/Theme.C37A">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".view.AddProductActivity"
+            android:exported="true"
+            android:label="@string/title_activity_add_product"
+            android:theme="@style/Theme.C37A">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".RegistrationActivity"
             android:exported="true"
             android:label="@string/title_activity_registration"
@@ -40,7 +62,7 @@
             android:name=".DashboardActivity"
             android:exported="true"
             android:label="@string/title_activity_dashboard"
-            android:theme="@style/Theme.C37A" >
+            android:theme="@style/Theme.C37A">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

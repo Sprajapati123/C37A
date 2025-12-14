@@ -1,5 +1,6 @@
 package com.example.c37a
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
@@ -84,6 +85,8 @@ fun RegisterBody() {
     var terms by remember { mutableStateOf(false) }
 
     var context = LocalContext.current
+
+    val activity = context as? Activity
 
     var calendar = Calendar.getInstance()
 
@@ -270,7 +273,7 @@ fun RegisterBody() {
                                         Toast.makeText(context,
                                             msg,
                                             Toast.LENGTH_SHORT).show()
-                                        //activity.finish()
+                                        activity?.finish()
                                     }else{
                                         Toast.makeText(context,
                                             msg,

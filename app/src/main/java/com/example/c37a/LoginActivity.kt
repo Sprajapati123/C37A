@@ -56,11 +56,14 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.c37a.repository.UserRepoImpl
 import com.example.c37a.ui.theme.Black
 import com.example.c37a.ui.theme.Blue
 import com.example.c37a.ui.theme.C37ATheme
 import com.example.c37a.ui.theme.PurpleGrey80
 import com.example.c37a.ui.theme.White
+import com.example.c37a.view.ForgetPasswordActivity
+import com.example.c37a.viewmodel.UserViewModel
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,6 +89,7 @@ fun LoginBody() {
         "User",
         Context.MODE_PRIVATE
     )
+    val userViewModel = remember { UserViewModel(UserRepoImpl()) }
 
     val localEmail: String? = sharedPreferences.getString("email", "")
     val localPassword: String? = sharedPreferences.getString("password", "")
@@ -233,6 +237,8 @@ fun LoginBody() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
+                        val intent = Intent(context, ForgetPasswordActivity::class.java)
+                        context.startActivity(intent)
 
                     }
                     .padding(vertical = 15.dp, horizontal = 15.dp)
@@ -240,18 +246,16 @@ fun LoginBody() {
 
             Button(
                 onClick = {
-                    if (localEmail == email && localPassword == password) {
-                        val intent = Intent(
-                            context, DashboardActivity::class.java
-                        )
-
-                        context.startActivity(intent)
-                        activity.finish()
-                    } else {
-                        Toast.makeText(context,
-                            "invalid login",
-                            Toast.LENGTH_SHORT).show()
-                    }
+                 userViewModel.login(email,password){
+                     success,message->
+                     if(success){
+                         val intent = Intent(context, DashboardActivity::class.java)
+                         context.startActivity(intent)
+                         activity?.finish()
+                     }else{
+                         Toast.makeText(context,message, Toast.LENGTH_SHORT).show()
+                     }
+                 }
 
 
                 },
