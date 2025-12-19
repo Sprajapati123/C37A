@@ -70,19 +70,19 @@ fun DashboardBody() {
     )
 
     Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(onClick = {
-                val intent = Intent(
-                    context, AddProductActivity::class.java,
-                )
-                context.startActivity(intent)
-            }) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = null
-                )
-            }
-        },
+       floatingActionButton = {
+           FloatingActionButton(onClick = {
+               val intent = Intent(
+                   context,
+                   AddProductActivity::class.java
+               )
+               context.startActivity(intent)
+           }) {
+               Icon(
+                   Icons.Default.Add,contentDescription = null
+               )
+           }
+       },
         topBar = {
             CenterAlignedTopAppBar(
                 title = {Text("Ecommerce")},

@@ -12,90 +12,61 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.c37a.repository.ProductRepoImpl
+import com.example.c37a.viewmodel.ProductViewModel
 
 @Composable
 fun HomeScreen() {
-    val images = listOf(
-        R.drawable.face,
-        R.drawable.bettafish,
-        R.drawable.dog,
-        R.drawable.bird,
-        R.drawable.hamster,
-        R.drawable.goldfish,
-        R.drawable.guineapig,
-    )
 
-    val names = listOf(
-        "Facebook",
-        "Bettafish",
-        "Dog",
-        "Bird",
-        "Hamster",
-        "Goldfish",
-        "GuineaPig",
-    )
+    val productViewModel = remember { ProductViewModel(ProductRepoImpl()) }
+
+    LaunchedEffect(Unit) {
+        productViewModel.getAllProduct()
+    }
+
+    val allProducts = productViewModel.allProducts.observeAsState(initial = emptyList())
+
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
-        item {
-            Text("Welcome")
-            Text("Good Morning")
-        }
-        item {
-            LazyRow {
-                items(images.size) { index ->
-                    Column {
-                        Image(
-                            painter = painterResource(images[index]),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(70.dp)
-                                .padding(end = 10.dp)
-                        )
-                        Text(names[index])
+        items(allProducts.value!!.size){index->
+            val data = allProducts.value!![index]
+            Card(modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp)){
+                Column {
+                    Text(data.name)
+                    Text(data.price.toString())
+                    Text(data.desc)
+                    IconButton(onClick = {}) {
+                        Icon(Icons.Default.Edit,contentDescription = null)
+                    }
+                    IconButton(onClick = {}) {
+                        Icon(Icons.Default.Delete,contentDescription = null)
                     }
                 }
             }
         }
 
-
-
-       item {
-           Image(
-               painter = painterResource(R.drawable.banner),
-               contentDescription = null,
-               modifier = Modifier.fillMaxWidth()
-           )
-           Text("Featured Products")
-           LazyVerticalGrid(
-               columns = GridCells.Fixed(3),
-               modifier = Modifier.height(500.dp)
-           ) {
-              items(images.size){index->
-                  Image(
-                      painter = painterResource(images[index]),
-                      contentDescription = null,
-                      modifier = Modifier
-                          .size(70.dp)
-                          .padding(end = 10.dp)
-                  )
-           }
-       }
-
-
-
-    }
     }
 }
 
