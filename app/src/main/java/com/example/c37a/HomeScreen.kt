@@ -78,7 +78,12 @@ fun HomeScreen() {
                             showDialog = false
                         }) {Text("Cancel") }
                     },
-                    title = {Text("Update Product")}
+                    title = {Text("Update Product")},
+                    text = {
+                        Column {
+
+                        }
+                    }
                 )
             }
         }
