@@ -11,7 +11,7 @@ interface ProductRepo {
     fun deleteProduct(productId: String, callback: (Boolean, String) -> Unit)
 
     fun editProduct(
-        productId: String,
+
         model: ProductModel,
         callback: (Boolean, String) -> Unit
     )

@@ -46,11 +46,10 @@ class ProductRepoImpl : ProductRepo {
     }
 
     override fun editProduct(
-        productId: String,
         model: ProductModel,
         callback: (Boolean, String) -> Unit
     ) {
-        ref.child(productId).updateChildren(model.toMap()).addOnCompleteListener {
+        ref.child(model.productId).updateChildren(model.toMap()).addOnCompleteListener {
             if (it.isSuccessful) {
                 callback(true, "Product updated successfully")
             } else {
