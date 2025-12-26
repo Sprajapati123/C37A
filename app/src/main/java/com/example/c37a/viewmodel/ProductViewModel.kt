@@ -1,5 +1,7 @@
 package com.example.c37a.viewmodel
 
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.c37a.model.ProductModel
@@ -56,5 +58,9 @@ class ProductViewModel(val repo: ProductRepo) : ViewModel() {
                 _products.value = null
             }
         }
+    }
+
+    fun uploadImage(context: Context, imageUri: Uri, callback: (String?) -> Unit){
+        repo.uploadImage(context,imageUri,callback)
     }
 }

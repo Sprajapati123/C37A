@@ -1,5 +1,7 @@
 package com.example.c37a.repository
 
+import android.content.Context
+import android.net.Uri
 import com.example.c37a.model.ProductModel
 
 interface ProductRepo {
@@ -19,4 +21,9 @@ interface ProductRepo {
     fun getAllProduct(callback: (Boolean, String, List<ProductModel>?) -> Unit)
 
     fun getProductById(productId: String, callback: (Boolean, String, ProductModel?) -> Unit)
+
+    fun uploadImage(context: Context, imageUri: Uri, callback: (String?) -> Unit)
+
+    fun getFileNameFromURI(context: Context,imageUri: Uri) : String?
+
 }
